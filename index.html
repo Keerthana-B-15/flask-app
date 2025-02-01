@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Disease Classifier</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { width: 60%; margin: auto; padding: 20px; }
+        .preview img { width: 150px; height: 150px; object-fit: cover; margin: 10px; }
+        .result { border: 1px solid #ddd; padding: 10px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload Skin Images for Classification</h2>
+
+        <form action="/" method="post" enctype="multipart/form-data">
+            <input type="file" name="files[]" multiple required>
+            <button type="submit">Upload</button>
+        </form>
+
+        <h3>Uploaded Images & Predictions</h3>
+        {% if results %}
+            {% for result in results %}
+                {% if 'error' in result %}
+                    <div class="result">
+                        <p><strong>{{ result.filename }}</strong>: {{ result.error }}</p>
+                    </div>
+                {% else %}
+                    <div class="result">
+                        <img src="{{ result.file_path }}" alt="Uploaded Image">
+                        <p><strong>Filename:</strong> {{ result.filename }}</p>
+                        <p><strong>Disease:</strong> {{ result.disease }}</p>
+                        <p><strong>Confidence:</strong> {{ '%.2f' % (result.confidence * 100) }}%</p>
+                        <p><strong>Reason:</strong> {{ result.reason }}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>
